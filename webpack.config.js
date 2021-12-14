@@ -1,6 +1,6 @@
 const path = require('path')
 //const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = [{
   mode: 'production',
@@ -22,10 +22,19 @@ module.exports = [{
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'sass-loader']
-        })
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: 'rcs-[local]',
+                exportLocalsConvention: 'dashes'
+              }
+            }
+          },
+          { loader: 'sass-loader' }
+        ]
       }
     ]
   },
@@ -34,7 +43,7 @@ module.exports = [{
   },
   plugins: [
     // new BundleAnalyzerPlugin(),
-    new ExtractTextPlugin('customScroll.css')
+    new MiniCssExtractPlugin({ filename: 'customScroll.css' })
   ],
   externals: {
     react: 'react',
@@ -57,6 +66,22 @@ module.exports = [{
         use: {
           loader: 'babel-loader'
         }
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: 'rcs-[local]',
+                exportLocalsConvention: 'dashes'
+              }
+            }
+          },
+          { loader: 'sass-loader' }
+        ]
       }
     ]
   },
